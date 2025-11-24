@@ -134,6 +134,7 @@ def pred_model(df_covid):
     #Predict our y results using our X_val_scaled data, 
     #which was based on the rules in our training set.
     y_val_pred = LinReg.predict(X_val_scaled_minmax)
+    y_val_pred = abs(y_val_pred)  # Converting all predictions to positive
 
     # Convert predictions to a Series with the same index as X_val
     y_val_pred_series = pd.Series(y_val_pred.flatten().round(2), index=X_val.index, name='Predicted_Deaths')
@@ -144,7 +145,7 @@ def pred_model(df_covid):
 
     df_covid.dropna(subset = ['Predicted_Deaths'], how='all', inplace=True)
 
-    df_covid.reset_index(drop=True).sort_values(by = 'Date', ascending = True)
+    df_covid = df_covid.sort_values(by='Date', ascending=True).reset_index(drop=True)
 
     df_covid.to_csv('data/processed/df_covid_val_pred.csv')
 
